@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Order Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 10px;
+      margin: 10px;
+    }
+
+    @media screen and (max-width: 900px) {
+      .grid-container {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+      }
+    }
+    
+    @media screen and (max-width: 700px) {
+      .grid-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(5, 1fr);
+      }
+    }
+
+    .chart-container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      max-height: 400px; /* Adjust the maximum height as needed */
+      overflow-y: auto; /* Add vertical scroll if the content exceeds the container height */
+    }
+
+    .chart-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    h1,p {
+      text-align: center;
+    }
+
+    .navbar {
+      background-color: #f1f1f1;
+      overflow: hidden;
+    }
+
+    .navbar a {
+      float: left;
+      padding: 12px;
+      text-decoration: none;
+      color: #000;
+    }
+
+    .navbar a:hover {
+      background-color: #ddd;
+    }
+
+    .navbar a.active {
+      background-color: #4CAF50;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <a href="{% url 'order_form' %}">Orders Form</a>
+    <a href="{% url 'viz' %}">Dashboard</a>
+  </div>
+
+
+  <h1>Real Time Orders - Dashboard</h1>
+  <p> Try by giving a order from Order form </p>
+
+  <div class="grid-container">
+    <div class="chart-container">
+      <h2 class="chart-title">Total Orders</h2>
+      <canvas id="total-orders-chart"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <h2 class="chart-title">Orders by Category</h2>
+      <canvas id="category-orders-chart"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <h2 class="chart-title">Orders by Location</h2>
+      <canvas id="location-orders-chart"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <h2 class="chart-title">Orders by Colour</h2>
+      <canvas id="colour-orders-chart"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <h2 class="chart-title">Orders by Sizes</h2>
+      <canvas id="size-orders-chart"></canvas>
+    </div>
+  </div>
+
+  <script>
+    const categories = {{ categories|safe }};
+    const locations = {{ locations|safe }};
+    const colours = {{ colours|safe }};
+    const sizes = {{ sizes|safe }};
+
+    const totalOrdersCtx = document.getElementById('total-orders-chart').getContext('2d');
+    new Chart(totalOrdersCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Total Orders'],
+        datasets: [{
+          label: 'Total Orders',
+          data: [categories.length],
+          backgroundColor: 'rgba(75, 192, 192, 0.6)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        scales: {
+          x: {
+            grid: {
+              display: false,
+            },
+            ticks: {
+              display: true,
+            },
+            max: categories.length,
+          },
+          y: {
+            beginAtZero: true,
+            grid: {
+              display: false,
+            },
+          },
+        },
+      },
+    });
+    const categoryOrdersCtx = document.getElementById('category-orders-chart').getContext('2d');
+    const categoryCounts = countOccurrences(categories);
+    const categoryLabels = Object.keys(categoryCounts);
+    const categoryData = Object.values(categoryCounts);
+
+    new Chart(categoryOrdersCtx, {
+      type: 'bar',
+      data: {
+        labels: categoryLabels,
+        datasets: [{
+          label: 'Orders by Category',
+          data: categoryData,
+          backgroundColor: 'rgba(125, 255, 125, 0.6)',
+          borderColor: 'rgba(125, 255, 125, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          x: {
+            grid: {
+              display: true 
+            },
+          },
+          y: {
+            beginAtZero: true,
+            grid: {
+              display: false,
+            },
+          }
+        },
+        plugins: {
+          legend: {
+            display: false, 
+          },
+        },
+      },
+    });
+
+
+    const locationOrdersCtx = document.getElementById('location-orders-chart').getContext('2d');
+    const locationCounts = countOccurrences(locations);
+    const locationLabels = Object.keys(locationCounts);
+    const locationData = Object.values(locationCounts);
+
+    new Chart(locationOrdersCtx, {
+      type: 'bar',
+      data: {
+        labels: locationLabels,
+        datasets: [{
+          label: 'Orders by Location',
+          data: locationData,
+          backgroundColor: 'rgba(0,0,0, 0.2)',
+          borderColor: 'rgba(0,0,0, 0.4)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        scales: {
+          x: {
+            grid: {
+              display: false,
+            },
+          },
+          y: {
+            beginAtZero: true,
+            grid: {
+              display: true,
+            },
+          }
+        },
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+      },
+    });
+
+
+    const colourOrdersCtx = document.getElementById('colour-orders-chart').getContext('2d');
+    const colourCounts = countOccurrences(colours);
+    const colourLabels = Object.keys(colourCounts);
+    const colourData = Object.values(colourCounts);
+
+    new Chart(colourOrdersCtx, {
+      type: 'pie',
+      data: {
+        labels: colourLabels,
+        datasets: [{
+          label: 'Orders by Colour',
+          data: colourData,
+          backgroundColor: [
+            'rgba(0,0,0, 0.4)',
+            'rgba(255, 99, 132, 0.6)',
+            'rgba(0,0,0, 0.0001)',
+          ],
+          hoverBackgroundColor: [
+          'rgba(0,0,0, 0.6)',
+          'rgba(255, 99, 132, 0.8)',
+          'rgba(0,0,0, 0)',
+        ],
+          borderColor: [
+            'rgba(0,0,0, 0.8)',
+            'rgba(255, 99, 132, 0.8)',
+            'rgba(1,1,1,0.1)',
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'right',
+          },
+        },
+      },
+    });
+
+    const sizeOrdersCtx = document.getElementById('size-orders-chart').getContext('2d');
+    const sizeCounts = countOccurrences(sizes);
+    const sizeLabels = Object.keys(sizeCounts);
+    const sizeData = Object.values(sizeCounts);
+
+    new Chart(sizeOrdersCtx, {
+      type: 'bar',
+      data: {
+        labels: sizeLabels,
+        datasets: [{
+          label: 'Orders by Size',
+          data: sizeData,
+          backgroundColor: 'rgba(150, 200, 250, 0.6)',
+          borderColor: 'rgba(150,            200, 250, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          x: {
+            grid: {
+              display: true,
+            },
+          },
+          y: {
+            beginAtZero: true,
+            grid: {
+              display: false,
+            },
+          }
+        },
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+      },
+    });
+
+
+    function countOccurrences(arr) {
+      return arr.reduce((count, val) => {
+        count[val] = (count[val] || 0) + 1;
+        return count;
+      }, {});
+    }
+
+
+  </script>
+</body>
+</html>

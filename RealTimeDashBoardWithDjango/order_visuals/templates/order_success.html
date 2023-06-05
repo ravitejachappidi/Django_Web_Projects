@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Order Confirmation</title>
+  <style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+    h1 {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      margin-top: 20px;
+    }
+
+    .success-message {
+      background-color: #dff0d8;
+      border: 1px solid #d6e9c6;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .confirmation-message {
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .delivery-message {
+      background-color: #f8f8f8;
+      border: 1px solid #eee;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .navbar {
+        background-color: #f1f1f1;
+        overflow: hidden;
+        width: 100%;
+      }
+  
+      .navbar a {
+        float: left;
+        padding: 12px;
+        text-decoration: none;
+        color: #000;
+      }
+  
+      .navbar a:hover {
+        background-color: #ddd;
+      }
+  
+      .navbar a.active {
+        background-color: #4CAF50;
+        color: #fff;
+      }
+  </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="{% url 'order_form' %}">Orders Form</a>
+        <a href="{% url 'viz' %}">Dashboard</a>
+    </div>
+
+
+  <div class="success-message">
+    <h1>Your order is successfully completed</h1>
+  </div>
+
+  <div class="confirmation-message">
+    <h1>We will reach you in 2 days for confirmation</h1>
+  </div>
+
+  <div class="delivery-message">
+    <h1>On successful confirmation, your order will be delivered to your home in 5 days</h1>
+  </div>
+</body>
+</html>

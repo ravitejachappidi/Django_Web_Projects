@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Order Form</title>
+  <!doctype html>
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    
+    h1 {
+      text-align: center;
+    }
+    
+    form {
+      max-width: 400px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 20px;
+      box-sizing: border-box;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+    
+    input[type="number"] {
+      width: 50px;
+    }
+    
+    input[type="radio"] {
+      margin-right: 5px;
+    }
+    
+    input[type="submit"] {
+      width: 100%;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    
+    a.button {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      padding: 10px 20px;
+      background-color: #008CBA;
+      color: white;
+      border-radius: 5px;
+    }
+    
+    a.button:hover {
+      background-color: #0077A8;
+    }
+    
+    .navbar {
+      background-color: #f1f1f1;
+      overflow: hidden;
+    }
+    
+    .navbar a {
+      float: left;
+      padding: 12px;
+      text-decoration: none;
+      color: #000;
+    }
+    
+    .navbar a:hover {
+      background-color: #ddd;
+    }
+    
+    .navbar a.active {
+      background-color: #4CAF50;
+      color: #fff;
+    }
+    
+    @media screen and (max-width: 600px) {
+      form {
+        padding: 0 10px;
+      }
+      
+      input[type="submit"] {
+        width: auto;
+      }
+    }
+    
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <a href="{% url 'order_form' %}">Orders Form</a>
+    <a href="{% url 'viz' %}">Dashboard</a>
+  </div>
+
+
+  <h1>Order Form</h1>
+  
+  <form action="{% url 'order_form' %}" method="POST">
+    {% csrf_token %}
+    
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br><br>
+    
+    <label for="location">Location:</label>
+    <select id="location" name="location">
+      <option value="Hyderabad">Hyderabad</option>
+      <option value="Vizag">Vizag</option>
+      <option value="Delhi">Delhi</option>
+      <option value="Chennai">Chennai</option>
+      <option value="Mumbai">Mumbai</option>
+      <option value="Bangalore">Bangalore</option>
+    </select><br><br>
+    
+    <label for="category">Category:</label>
+    <select id="category" name="category">
+      <option value="men shirts">Men Shirts</option>
+      <option value="men t-shirts">Men T-shirts</option>
+      <option value="women shirts">Women Shirts</option>
+      <option value="women t-shirts">Women T-shirts</option>
+    </select><br><br>
+    
+    <label for="colour">Colour:</label>
+    <select id="colour" name="colour">
+      <option value="Black">Black</option>
+      <option value="Light Pink">Light Pink</option>
+      <option value="White">White</option>
+    </select><br><br>
+    
+    <label for="size">Size:</label>
+    <select id="size" name="size">
+      <option value="S">S</option>
+      <option value="M">M</option>
+      <option value="L">L</option>
+      <option value="XL">XL</option>
+    </select><br><br>
+    
+    <label for="quantity">Quantity:</label>
+    <input type="number" id="quantity" name="quantity" min="1" required><br><br>
+    
+    <label for="hear-about">Where did you hear from us?</label>
+    <select id="hear-about" name="hear-about">
+      <option value="Social media">Social media</option>
+      <option value="Friends">Friends</option>
+      <option value="TV advertisement">TV advertisement</option>
+    </select><br><br>
+    
+    <label for="visit-store">Would you consider visiting our store if possible?</label><br>
+    <input type="radio" id="yes" name="visit-store" value="yes" required>
+    <label for="yes">Yes</label>
+    <input type="radio" id="no" name="visit-store" value="no">
+    <label for="no">No</label><br><br>
+    
+    <input type="submit" value="Submit">
+  </form>
+
+</body>
+</html>
